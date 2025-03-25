@@ -12,13 +12,15 @@ interface MovieCardProps {
   isFavorite?: boolean;
   onToggleFavorite?: (id: number) => void;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export function MovieCard({ 
   movie, 
   isFavorite = false,
   onToggleFavorite,
-  className 
+  className,
+  style
 }: MovieCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -42,6 +44,7 @@ export function MovieCard({
         isHovered ? 'scale-[1.02]' : 'scale-100',
         className
       )}
+      style={style}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
