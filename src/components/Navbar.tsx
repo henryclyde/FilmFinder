@@ -1,12 +1,16 @@
-
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Search, Heart, Film, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { SearchBar } from '@/components/SearchBar';
 
-export function Navbar() {
+interface NavbarProps {
+  onSearch?: (term: string) => void;
+}
+
+export function Navbar({ onSearch }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
@@ -89,23 +93,28 @@ export function Navbar() {
             )}
           </>
         ) : (
-          <nav className="flex items-center space-x-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={cn(
-                  'flex items-center py-2 px-4 rounded-md transition-all duration-200',
-                  location.pathname === link.to
-                    ? 'bg-secondary text-primary font-medium'
-                    : 'text-muted-foreground hover:bg-secondary/50'
-                )}
-              >
-                {link.icon}
-                <span className="ml-2">{link.label}</span>
-              </Link>
-            ))}
-          </nav>
+          <div className="flex items-center gap-4">
+            {onSearch && (
+              <SearchBar onSearch={onSearch} className="w-64" />
+            )}
+            <nav className="flex items-center space-x-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className={cn(
+                    'flex items-center py-2 px-4 rounded-md transition-all duration-200',
+                    location.pathname === link.to
+                      ? 'bg-secondary text-primary font-medium'
+                      : 'text-muted-foreground hover:bg-secondary/50'
+                  )}
+                >
+                  {link.icon}
+                  <span className="ml-2">{link.label}</span>
+                </Link>
+              ))}
+            </nav>
+          </div>
         )}
       </div>
     </header>

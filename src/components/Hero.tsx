@@ -7,9 +7,8 @@ import { useNavigate } from 'react-router-dom';
 
 const backgroundImages = [
   'https://image.tmdb.org/t/p/original/rLb2cwF3Pazuxaj0sRXQ037tGI1.jpg', // Oppenheimer
-  'https://image.tmdb.org/t/p/original/628Dep6AxEtDxjZoGP78TsOxYbK.jpg', // Barbie
-  'https://image.tmdb.org/t/p/original/iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg', // Dune
-  'https://image.tmdb.org/t/p/original/dB6Krk806zeqd0YNp2ngQ9zXteH.jpg', // Inception
+  'https://image.tmdb.org/t/p/original/628Dep6AxEtDxjZoGP78TsOxYbK.jpg', // Mission Impossible
+  'https://image.tmdb.org/t/p/original/iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg', // Barbie
 ];
 
 export function Hero() {
@@ -61,10 +60,10 @@ export function Hero() {
           loaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
         )}>
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-            Find Your Perfect Movie
+            Find Your Favorite Movies
           </h1>
           <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-8">
-            Discover films based on trusted ratings from Rotten Tomatoes and IMDb
+            Discover top rated movies fitting your tastes
           </p>
           
           <form 
@@ -85,7 +84,7 @@ export function Hero() {
             </div>
             <Button 
               type="submit" 
-              className="rounded-r-lg bg-primary hover:bg-primary/90 px-5 flex-shrink-0"
+              className="rounded-r-lg bg-primary hover:bg-primary/90 px-5 flex-shrink-0 h-auto"
             >
               <Search className="h-5 w-5" />
             </Button>

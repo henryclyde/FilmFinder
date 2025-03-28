@@ -1,81 +1,93 @@
-
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { MovieList } from '@/components/MovieList';
+import { MovieFilters } from '@/components/MovieFilters';
 import { Navbar } from '@/components/Navbar';
-import { SearchBar } from '@/components/SearchBar';
 import { MovieService } from '@/services/movieService';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Movie } from '@/types/movie';
 
-const Movies = () => {
+export default function Movies() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<number[]>([]);
-  const [activeTab, setActiveTab] = useState('all');
-  const location = useLocation();
+  const [genres, setGenres] = useState<string[]>([]);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get URL parameters
+  const searchParams = new URLSearchParams(location.search);
+  const searchParam = searchParams.get('search') || '';
+  const genreParam = searchParams.get('genre') || '';
+  const sortParam = searchParams.get('sort') || '';
 
   useEffect(() => {
-    // Get search and sort parameters from URL
-    const params = new URLSearchParams(location.search);
-    const searchParam = params.get('search') || '';
-    const sortParam = params.get('sort') || '';
-    
-    // Set active tab based on sort parameter
-    if (sortParam === 'imdb') {
-      setActiveTab('imdb');
-    } else if (sortParam === 'rt') {
-      setActiveTab('rt');
-    } else {
-      setActiveTab('all');
-    }
-    
+    const fetchGenres = async () => {
+      const genreList = await MovieService.getGenres();
+      setGenres(genreList);
+    };
+    fetchGenres();
+  }, []);
+
+  useEffect(() => {
     const fetchMovies = async () => {
       try {
         setLoading(true);
-        let results: Movie[] = [];
+        setError(null);
+        console.log('Fetching movies...');
         
+        let results: Movie[] = [];
         if (searchParam) {
+          console.log('Searching for:', searchParam);
           results = await MovieService.searchMovies(searchParam);
-        } else if (sortParam === 'imdb') {
-          results = await MovieService.getTopRatedMovies('imdb', 10);
-        } else if (sortParam === 'rt') {
-          results = await MovieService.getTopRatedMovies('rottenTomatoes', 10);
         } else {
-          results = await MovieService.getMovies();
+          results = await MovieService.getMovies(sortParam, genreParam);
         }
         
         setMovies(results);
         setFavorites(MovieService.getFavorites());
       } catch (error) {
         console.error('Error fetching movies:', error);
+        setError('Failed to load movies');
       } finally {
         setLoading(false);
       }
     };
     
     fetchMovies();
-  }, [location.search]);
+  }, [searchParam, genreParam, sortParam]);
 
   const handleSearch = (term: string) => {
     const params = new URLSearchParams();
     if (term) {
       params.set('search', term);
     }
+    if (genreParam) {
+      params.set('genre', genreParam);
+    }
+    if (sortParam) {
+      params.set('sort', sortParam);
+    }
     navigate(`/movies?${params.toString()}`);
   };
 
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    const params = new URLSearchParams();
-    
-    if (value === 'imdb') {
-      params.set('sort', 'imdb');
-    } else if (value === 'rt') {
-      params.set('sort', 'rt');
+  const handleGenreChange = (value: string) => {
+    const params = new URLSearchParams(location.search);
+    if (value && value !== 'all') {
+      params.set('genre', value);
+    } else {
+      params.delete('genre');
     }
-    
+    navigate(`/movies?${params.toString()}`);
+  };
+
+  const handleSortChange = (value: string) => {
+    const params = new URLSearchParams(location.search);
+    if (value) {
+      params.set('sort', value);
+    } else {
+      params.delete('sort');
+    }
     navigate(`/movies?${params.toString()}`);
   };
 
@@ -89,35 +101,26 @@ const Movies = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <Navbar onSearch={handleSearch} />
       
-      <main className="flex-1 pt-24 pb-16">
-        <div className="max-w-screen-xl mx-auto px-6">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-primary mb-6">Discover Movies</h1>
-            <SearchBar 
-              initialValue={new URLSearchParams(location.search).get('search') || ''}
-              onSearch={handleSearch}
-              className="mb-8"
-            />
-            
-            <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-              <TabsList className="w-full max-w-md mx-auto grid grid-cols-3">
-                <TabsTrigger value="all">All Movies</TabsTrigger>
-                <TabsTrigger value="imdb">IMDb Top</TabsTrigger>
-                <TabsTrigger value="rt">RT Top</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
-          
-          <MovieList 
-            movies={movies}
-            loading={loading}
-            error={movies.length === 0 && !loading ? "No movies found matching your criteria" : null}
-            favorites={favorites}
-            onToggleFavorite={handleToggleFavorite}
-          />
-        </div>
+      <main className="flex-1 container mx-auto px-6 py-8">
+        <h1 className="text-3xl font-bold text-primary mb-8">Movies</h1>
+        
+        <MovieFilters
+          genre={genreParam}
+          sortBy={sortParam}
+          onGenreChange={handleGenreChange}
+          onSortChange={handleSortChange}
+          genres={genres}
+        />
+
+        <MovieList
+          movies={movies}
+          loading={loading}
+          error={error}
+          favorites={favorites}
+          onToggleFavorite={handleToggleFavorite}
+        />
       </main>
       
       <footer className="py-8 border-t border-border">
@@ -127,6 +130,4 @@ const Movies = () => {
       </footer>
     </div>
   );
-};
-
-export default Movies;
+}

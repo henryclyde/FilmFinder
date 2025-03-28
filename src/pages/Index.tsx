@@ -108,7 +108,7 @@ const Index = () => {
       
       <footer className="py-8 border-t border-border">
         <div className="max-w-screen-xl mx-auto px-6 text-center text-muted-foreground">
-          <p>© {new Date().getFullYear()} MovieVibes. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} FilmFinder. All rights reserved.</p>
         </div>
       </footer>
     </div>

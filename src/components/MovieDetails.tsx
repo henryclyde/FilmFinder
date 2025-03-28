@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Movie } from '@/types/movie';
@@ -27,8 +26,7 @@ export function MovieDetails({
     overview, 
     backdropPath, 
     posterPath, 
-    imdbRating, 
-    rottenTomatoesRating, 
+    rating,
     runtime, 
     genres, 
     year, 
@@ -68,7 +66,7 @@ export function MovieDetails({
       </div>
 
       {/* Content */}
-      <div className="relative pt-32 md:pt-48 pb-16 max-w-screen-xl mx-auto px-6">
+      <div className="relative container mx-auto px-6 pt-[25vh] pb-16">
         <div className="flex flex-col md:flex-row gap-8">
           {/* Poster */}
           <div className={cn(
@@ -92,7 +90,7 @@ export function MovieDetails({
           </div>
 
           {/* Details */}
-          <div className="flex-1">
+          <div className="flex-grow">
             <div className={cn(
               'transform transition-all duration-700',
               loaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
@@ -112,49 +110,46 @@ export function MovieDetails({
                     <span className="text-muted-foreground">{runtime} min</span>
                   </div>
                 )}
-                <div className="flex gap-3">
-                  <Rating source="imdb" score={imdbRating} />
-                  <Rating source="rottenTomatoes" score={rottenTomatoesRating} />
-                </div>
+                {rating !== undefined && rating !== null && (
+                  <Rating score={rating} />
+                )}
               </div>
 
-              <div className="space-y-6">
-                {genres && genres.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {genres.map((genre) => (
-                      <span 
-                        key={genre} 
-                        className="px-3 py-1 bg-secondary text-xs rounded-full text-secondary-foreground"
-                      >
-                        {genre}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                <p className="text-foreground/90 text-lg leading-relaxed">
-                  {overview}
-                </p>
-
-                {director && (
-                  <p className="text-muted-foreground">
-                    <span className="font-medium">Director:</span> {director}
-                  </p>
-                )}
-                
-                <div className="pt-4">
-                  <Button
-                    variant={isFavorite ? "default" : "outline"}
-                    className={cn(
-                      "gap-2 transition-all duration-200", 
-                      isFavorite && "bg-red-500 hover:bg-red-600 border-0"
-                    )}
-                    onClick={handleToggleFavorite}
-                  >
-                    <Heart className={cn("h-4 w-4", isFavorite && "fill-current")} />
-                    {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
-                  </Button>
+              {genres && genres.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {genres.map((genre) => (
+                    <span 
+                      key={genre} 
+                      className="px-3 py-1 bg-secondary text-xs rounded-full text-secondary-foreground"
+                    >
+                      {genre}
+                    </span>
+                  ))}
                 </div>
+              )}
+
+              <p className="text-foreground/90 text-lg leading-relaxed mb-6">
+                {overview}
+              </p>
+
+              {director && (
+                <p className="text-muted-foreground mb-6">
+                  <span className="font-medium">Director:</span> {director}
+                </p>
+              )}
+              
+              <div>
+                <Button
+                  variant={isFavorite ? "default" : "outline"}
+                  className={cn(
+                    "gap-2 transition-all duration-200", 
+                    isFavorite && "bg-red-500 hover:bg-red-600 border-0"
+                  )}
+                  onClick={handleToggleFavorite}
+                >
+                  <Heart className={cn("h-4 w-4", isFavorite && "fill-current")} />
+                  {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+                </Button>
               </div>
             </div>
           </div>

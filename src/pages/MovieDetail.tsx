@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MovieDetails } from '@/components/MovieDetails';
@@ -9,12 +8,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const MovieDetail = () => {
+export default function MovieDetail() {
+  const { id } = useParams<{ id: string }>();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<number[]>([]);
-  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -65,6 +64,45 @@ const MovieDetail = () => {
     navigate(-1);
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="animate-pulse text-lg text-muted-foreground">
+            Loading...
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-lg text-red-500">
+            {error}
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (!movie) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-lg text-muted-foreground">
+            Movie not found
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -79,35 +117,11 @@ const MovieDetail = () => {
             <ArrowLeft className="h-4 w-4" /> Back
           </Button>
           
-          {loading ? (
-            <div className="px-6">
-              <div className="flex flex-col md:flex-row gap-8">
-                <Skeleton className="w-48 h-72 rounded-lg" />
-                <div className="flex-1 space-y-4">
-                  <Skeleton className="h-10 w-3/4" />
-                  <Skeleton className="h-4 w-1/3" />
-                  <Skeleton className="h-4 w-1/4" />
-                  <div className="space-y-2 pt-4">
-                    <Skeleton className="h-24 w-full" />
-                    <Skeleton className="h-4 w-1/2" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : error ? (
-            <div className="px-6 py-16 text-center">
-              <p className="text-red-500 mb-4">{error}</p>
-              <Button onClick={() => navigate('/movies')}>
-                Browse all movies
-              </Button>
-            </div>
-          ) : movie ? (
-            <MovieDetails
-              movie={movie}
-              isFavorite={favorites.includes(movie.id)}
-              onToggleFavorite={handleToggleFavorite}
-            />
-          ) : null}
+          <MovieDetails
+            movie={movie}
+            isFavorite={favorites.includes(movie.id)}
+            onToggleFavorite={handleToggleFavorite}
+          />
         </div>
       </main>
       
@@ -118,6 +132,4 @@ const MovieDetail = () => {
       </footer>
     </div>
   );
-};
-
-export default MovieDetail;
+}
