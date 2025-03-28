@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Search, Heart, Film, Menu, X } from 'lucide-react';
+import { Search, Heart, Film, Menu, X, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { SearchBar } from '@/components/SearchBar';
@@ -37,6 +37,7 @@ export function Navbar({ onSearch }: NavbarProps) {
     { to: '/', label: 'Home', icon: <Film size={16} /> },
     { to: '/movies', label: 'Discover', icon: <Search size={16} /> },
     { to: '/favorites', label: 'Favorites', icon: <Heart size={16} /> },
+    { to: '/watchlist', label: 'Watch List', icon: <List size={16} /> },
   ];
 
   return (
@@ -78,6 +79,7 @@ export function Navbar({ onSearch }: NavbarProps) {
                         { 'animate-delay-100': i === 0 },
                         { 'animate-delay-200': i === 1 },
                         { 'animate-delay-300': i === 2 },
+                        { 'animate-delay-400': i === 3 },
                         location.pathname === link.to
                           ? 'bg-secondary text-primary font-medium'
                           : 'text-muted-foreground hover:bg-secondary/50'
