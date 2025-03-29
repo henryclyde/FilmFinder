@@ -75,7 +75,7 @@ export function SearchBar({ initialValue = '', onSearch, className = '' }: Searc
       </div>
       <Button 
         type="submit" 
-        className="rounded-r-lg bg-primary hover:bg-primary/90 px-5"
+        className="rounded-r-lg bg-primary hover:bg-primary/90 px-5 h-auto"
       >
         <Search className="h-5 w-5" />
       </Button>

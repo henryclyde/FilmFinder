@@ -103,7 +103,7 @@ export default function Movies() {
     <div className="min-h-screen flex flex-col">
       <Navbar onSearch={handleSearch} />
       
-      <main className="flex-1 container mx-auto px-6 py-8">
+      <main className="flex-1 container mx-auto px-6 py-8 pt-24 pb-16">
         <h1 className="text-3xl font-bold text-primary mb-8">Movies</h1>
         
         <MovieFilters

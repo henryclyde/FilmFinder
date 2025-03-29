@@ -50,10 +50,12 @@ export function Navbar({ onSearch }: NavbarProps) {
       <div className="max-w-screen-xl mx-auto flex items-center justify-between">
         <Link 
           to="/" 
-          className="flex items-center gap-2 text-primary font-semibold text-xl transition-opacity duration-200 hover:opacity-80"
+          className={cn("flex items-center gap-2 text-gray-200 font-semibold text-xl transition-opacity duration-200 hover:opacity-80",
+            scrolled ? 'text-primary' : 'text-gray-200'
+          )}
         >
           <Film className="h-6 w-6" />
-          <span>MovieVibes</span>
+          <span>FilmFinder</span>
         </Link>
 
         {isMobile ? (

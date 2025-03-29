@@ -84,7 +84,7 @@ export function MovieCard({
       
       {/* Movie info */}
       <div className={cn(
-        'absolute bottom-0 left-0 right-0 p-4 transition-transform duration-300 ease-spring',
+        'absolute bottom-0 left-0 right-0 p-4 pb-10 pt-14 transition-transform duration-300 ease-spring bg-gradient-to-t from-black/80 via-black/80 to-transparent',
         isHovered ? 'translate-y-0' : 'translate-y-8 group-hover:translate-y-0'
       )}>
         <div className="flex justify-between items-center mb-1">

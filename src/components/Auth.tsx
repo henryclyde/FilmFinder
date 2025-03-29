@@ -1,10 +1,9 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Google } from 'lucide-react';
+import { Chrome } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface AuthProps {
@@ -59,7 +58,7 @@ export function Auth({ onSignIn }: AuthProps) {
         onClick={handleGoogleSignIn}
         disabled={isLoading}
       >
-        <Google className="mr-2 h-4 w-4" />
+        <Chrome className="mr-2 h-4 w-4" />
         Sign in with Google
       </Button>
       
